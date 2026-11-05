@@ -34,12 +34,12 @@ df_tavi_elective_join_vars
 #                                       prior_admission_date  = col_date(),
 #                                       prior_discharge_date  = col_date()))
 
-index_spells <- read_csv("data/index_spells.csv")   
-# TODO: your cohort extract must contain: index_spell_id (== der_spell_id), nhs_no
-
-lkp_frail <- read_csv("reference/frailty_risk_scores.csv",
-                     col_types = cols(icd10 = col_character(),
-                                      score = col_double()))
+# index_spells <- read_csv("data/index_spells.csv")   
+# # TODO: your cohort extract must contain: index_spell_id (== der_spell_id), nhs_no
+# 
+# lkp_frail <- read_csv("reference/frailty_risk_scores.csv",
+#                      col_types = cols(icd10 = col_character(),
+#                                       score = col_double()))
 
 
 # ------------------------------------------------------------------------------

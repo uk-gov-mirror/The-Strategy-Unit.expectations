@@ -12,6 +12,7 @@ library("DBI")
 library("here")
 library("odbc")
 # library("mgcv")
+library("arrow")
 library("broom")
 library("dplyr")
 library("purrr")
@@ -31,9 +32,10 @@ library("lubridate")
 # library("patchwork")
 # library("yardstick")
 
+options(scipen=999) 
+
 source(here("R", "003_charlson_function.R"))
 
-options(scipen=999) 
 
 server <- keyring::key_get("server")
 db <- keyring::key_get("db")

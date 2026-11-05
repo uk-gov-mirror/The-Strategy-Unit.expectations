@@ -27,20 +27,26 @@ Sys.time()
 gc()
 gc()
 
+# CAN FIND DETAILS OF SVT MODEL 2 IN MODEL OBJECT
+# DIFFERENCE IS NL TREATMENT OF YEAR: s(yr, by = imd_decile)
 
 
-mod_svt_01 |> saveRDS(here("data_raw", "mod_svt_01.rds"))
+# mod_svt_01 |> saveRDS(here("data_raw", "mod_svt_01.rds"))
 # mod_svt_01  <- readRDS(here("data_raw", "mod_svt_01.rds"))
+mod_svt_02  <- readRDS(here("data_raw", "mod_svt_02.rds"))
+mod_svt_03  <- readRDS(here("data_raw", "mod_svt_03.rds"))
 
 gc()
 gc()
 gc()
 
-mod_svt_01 |> 
+mgcv::plot.gam(mod_svt_03, pages = 0 )
+
+mod_svt_03 |> 
   broom::tidy(parametric = T) |> 
   mutate(odds = exp(estimate)) |> 
   mutate(lci = exp(estimate - 1.96 * std.error)) |> 
   mutate(uci = exp(estimate + 1.96 * std.error)) |> 
   select(term, estimate, odds, lci, uci) |> 
-  view("coeffs_svt_01")
+  view("coeffs_svt_03")
 

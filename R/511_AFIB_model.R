@@ -164,6 +164,8 @@ gc()
 gc()
 gc()
 
+mod_afib_02a <- readRDS(here("data_raw", "mod_afib_02a.rds"))
+
 mod_afib_02a |> 
   broom::tidy(parametric = T) |> 
   mutate(odds = exp(estimate)) |> 

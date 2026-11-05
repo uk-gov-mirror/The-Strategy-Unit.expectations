@@ -280,6 +280,9 @@ stopifnot(
   lkp_frailty_score$score[lkp_frailty_score$icd10 == "W19"] == 3.2
 )
 
+
+
+
 # 11. HOSPITAL FRAILTY LOOKBACK FOR TAVI -------------------------------------------
 
 # # READ AND RUN QUERY FROM SCRIPT IN THE SQL FOLDER:
@@ -324,7 +327,7 @@ stopifnot(
 df_lookback_afib <- readRDS(here("data","df_lookback_afib.rds")) 
 
 
-# 13. HOSPITAL FRAILTY + COMORBIDITY LOOKBACK FOR AFIB -------------------------------------------
+# 13. HOSPITAL FRAILTY + COMORBIDITY LOOKBACK FOR SVT -------------------------------------------
 
 ## READ AND RUN QUERY FROM SCRIPT IN THE SQL FOLDER:
 # sql_script_lookback_svt <- here("sql", "[UDAL]falsification_frailty_lookback.sql")
@@ -349,4 +352,40 @@ df_lookback_svt <- readRDS(here("data","df_lookback_svt.rds"))
 gc()
 gc()
 gc()
+
+
+
+# 14. HOSPITAL FRAILTY + COMORBIDITY LOOKBACK FOR THROMBECTOMY-----------------------------------
+
+## READ AND RUN QUERY FROM SCRIPT IN THE SQL FOLDER:
+# sql_script_lookback_thromb <- here("sql", "[UDAL]thromb_frailty_lookback.sql")
+# 
+# query_lookback_thromb <- readChar(sql_script_lookback_thromb, file.info(sql_script_lookback_thromb)$size) |>
+#   str_replace_all(string = _, "\n|\r|ï»¿", " ")
+# 
+# df_lookback_thromb <- dbGetQuery(con_one, query_lookback_thromb) |>
+#   as_tibble() |>
+#   clean_names() |>
+#   mutate(nhs_no = as.character(nhs_no)) |>
+#   mutate(across(contains("date"), ~ as_date(.)))
+# 
+# gc()
+# gc()
+# gc()
+# 
+# df_lookback_thromb |>
+#   write_parquet(
+#     sink = here("data_raw", "df_lookback_thromb.parquet"),
+#     compression = "gzip"
+#   )
+# 
+# gc()
+# gc()
+
+df_lookback_thromb <- open_dataset(here("data_raw","df_lookback_thromb.parquet")) |> 
+  collect()
+
+gc()
+gc()
+
 

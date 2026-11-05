@@ -50,7 +50,7 @@ df_afib_cleaned <-  readRDS(here("data_raw", "df_afib_cleaned.rds"))
 # df_svt_join_tables_scored |> saveRDS(here("data_raw", "df_svt_join_tables_scored.rds"))
 df_svt_join_tables_scored <- readRDS(here("data_raw", "df_svt_join_tables_scored.rds"))
 
-df_svt_cleaned |>  saveRDS(here("data_raw", "df_svt_cleaned.rds"))
+# df_svt_cleaned |>  saveRDS(here("data_raw", "df_svt_cleaned.rds"))
 df_svt_cleaned <-  readRDS(here("data_raw", "df_svt_cleaned.rds"))
 
 
@@ -74,6 +74,15 @@ source(here("R", "34_TAVI_EM_exclusions.R"))
 source(here("R", "35_TAVI_EM_tidy.R"))
 source(here("R", "38_TAVI_EM_join_tables.R"))
 # source(here("R", "39_TAVI_EM_model_df_prep.R"))
+
+# df_tavi_em_join_vars <-  readRDS(here("data_raw", "df_tavi_emergency_join_vars.rds"))
+
+# ON SPARSITY:
+# df_tavi_em_join_vars |> 
+#   filter(tavi_superspell == 1) |> 
+#   mutate(yr = as.integer(str_sub(fyear, 6, 7)) - 10) |> 
+#   count(yr, imd_decile) |> 
+#   pivot_wider(names_from = yr, values_from = n)
 
 
 # -------------------------------------------------------------------------

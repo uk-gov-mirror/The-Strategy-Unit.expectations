@@ -1,16 +1,19 @@
 
-set.seed(2731)
+set.seed(2741)
 R_SIMS <- 2000   # posterior draws
 
 
 dat <- df_svt_cleaned |>
-  # mutate(ablation_24m = as.integer(as.character(ablation_24m)))
+  # mutate(ablation_24m = as.integer(as.character(ablation_24m))) |> 
   identity()
 
 GRP_LEVELS <- levels(dat$imd_decile)
 stopifnot(length(GRP_LEVELS) == 10)
 
-mod <- mod_svt_01
+
+# mod <- mod_svt_01
+mod <- mod_svt_02
+
 
 
 # ---------------------------------------------------------------------
@@ -43,31 +46,31 @@ yearly_contrasts <- function(beta, Xp_A, Xp_obs, year) {
 }
 
 
-lp_matrix(mod, tester$df_subset[[1]], )                  # observed membership
-
-GRP_LEVELS[1]
-
-
-tester$xp_a[[1]] |> class()
-
-tester <- tibble(mowdel = rep(list(mod), 10)) |> 
-  mutate(decile = 1:10) |>
-  mutate(grp_levels = GRP_LEVELS[decile]) |>
-  mutate(df_subset = map(decile, \(x) dat |> filter(imd_decile == x) |> as_tibble())) |> 
-  mutate(xp_a = pmap(
-    list(mowdel, df_subset, decile),
-    \(x, y, z) lp_matrix(x, y, GRP_LEVELS[z])
-  )) |> 
-  mutate(xp_obs = pmap(
-    list(mowdel, df_subset),
-    \(x, y) lp_matrix(x, y)
-  )) |> 
-  mutate(point_e = pmap(
-    list(mowdel, xp_a, xp_obs, df_subset),
-    \(x, y, z, a) yearly_contrasts(coef(x), y, z, a$yr)
-  )) 
-
-tester$point_e[1]
+# lp_matrix(mod, tester$df_subset[[1]], )                  # observed membership
+# 
+# GRP_LEVELS[1]
+# 
+# 
+# tester$xp_a[[1]] |> class()
+# 
+# tester <- tibble(mowdel = rep(list(mod), 10)) |> 
+#   mutate(decile = 1:10) |>
+#   mutate(grp_levels = GRP_LEVELS[decile]) |>
+#   mutate(df_subset = map(decile, \(x) dat |> filter(imd_decile == x) |> as_tibble())) |> 
+#   mutate(xp_a = pmap(
+#     list(mowdel, df_subset, decile),
+#     \(x, y, z) lp_matrix(x, y, GRP_LEVELS[z])
+#   )) |> 
+#   mutate(xp_obs = pmap(
+#     list(mowdel, df_subset),
+#     \(x, y) lp_matrix(x, y)
+#   )) |> 
+#   mutate(point_e = pmap(
+#     list(mowdel, xp_a, xp_obs, df_subset),
+#     \(x, y, z, a) yearly_contrasts(coef(x), y, z, a$yr)
+#   )) 
+# 
+# tester$point_e[1]
 
 Xp_A   <- lp_matrix(mod, dat, GRP_LEVELS[10])   # everyone -> IMD 10 (LEAST DEPRIVED)
 # Xp_B   <- lp_matrix(mod, dat, GRP_LEVELS[2])   # everyone -> Group B # ev1 -> upper quart
@@ -142,47 +145,47 @@ tmp_001a <- results_sim |>
 
 
 
-tmp_001a |> 
-  # count(estimand)
-  select(-n) |> 
-  # select(yr, contains("imd"), margin_rate, fit_rate, if_top_rate) |> 
-  # select(yr, imd_top_quartile, margin_rate, fit_rate, if_top_rate) |> 
-  pivot_longer(cols = c(estimate, lower, upper, contains("patients")), names_to = "metric", values_to = "value") |> 
-  filter(!str_detect(metric, "patients")) %>%
-  ggplot()+
-  geom_line(
-    data = . %>% filter(metric == "estimate_pp"),
-    aes(year, value, colour = estimand)
-  )+
-  # geom_ribbon(
-  #   data = . %>% 
-  #     filter(estimand == "p_obs") %>%
-  #     pivot_wider(names_from = metric, values_from = value),
-  #   aes(year, ymin = lower_pp, ymax = upper_pp),
-  #   alpha = 0.15, 
-  #   colour = NA
-  # ) +
-  # geom_ribbon(
-  #   data = . %>% 
-  #     filter(estimand == "p_B") %>%
-  #     pivot_wider(names_from = metric, values_from = value),
-  #   aes(year, ymin = lower_pp, ymax = upper_pp),
-  #   alpha = 0.15, 
-  #   colour = NA
-  # ) +
-  geom_ribbon(
-    data = . %>%
-      filter(estimand == "policy") %>%
-      pivot_wider(names_from = metric, values_from = value),
-    aes(year, ymin = lower, ymax = upper),
-    alpha = 0.15,
-    colour = NA
-  ) +
-  theme_minimal()+
-  geom_blank(aes(y=0))+
-  ylab("Rate of ablations\n")+
-  facet_wrap(vars(imd_decile))+
-  NULL
+# tmp_001a |> 
+#   # count(estimand)
+#   select(-n) |> 
+#   # select(yr, contains("imd"), margin_rate, fit_rate, if_top_rate) |> 
+#   # select(yr, imd_top_quartile, margin_rate, fit_rate, if_top_rate) |> 
+#   pivot_longer(cols = c(estimate, lower, upper, contains("patients")), names_to = "metric", values_to = "value") |> 
+#   filter(!str_detect(metric, "patients")) %>%
+#   ggplot()+
+#   geom_line(
+#     data = . %>% filter(metric == "estimate_pp"),
+#     aes(year, value, colour = estimand)
+#   )+
+#   # geom_ribbon(
+#   #   data = . %>% 
+#   #     filter(estimand == "p_obs") %>%
+#   #     pivot_wider(names_from = metric, values_from = value),
+#   #   aes(year, ymin = lower_pp, ymax = upper_pp),
+#   #   alpha = 0.15, 
+#   #   colour = NA
+#   # ) +
+#   # geom_ribbon(
+#   #   data = . %>% 
+#   #     filter(estimand == "p_B") %>%
+#   #     pivot_wider(names_from = metric, values_from = value),
+#   #   aes(year, ymin = lower_pp, ymax = upper_pp),
+#   #   alpha = 0.15, 
+#   #   colour = NA
+#   # ) +
+#   geom_ribbon(
+#     data = . %>%
+#       filter(estimand == "policy") %>%
+#       pivot_wider(names_from = metric, values_from = value),
+#     aes(year, ymin = lower, ymax = upper),
+#     alpha = 0.15,
+#     colour = NA
+#   ) +
+#   theme_minimal()+
+#   geom_blank(aes(y=0))+
+#   ylab("Rate of ablations\n")+
+#   facet_wrap(vars(imd_decile))+
+#   NULL
 
 tmp_001a |> 
   # count(estimand)
